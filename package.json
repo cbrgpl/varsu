@@ -1,0 +1,75 @@
+{
+  "name": "css-lsp",
+  "description": "A language server to suggest css vars.",
+  "author": "cbrgpl",
+  "license": "MIT",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cbrgpl/lsp.git"
+  },
+  "publisher": "",
+  "categories": [],
+  "keywords": [],
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "activationEvents": [
+    "onLanguage:plaintext"
+  ],
+  "main": "./client/out/extension",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Example configuration",
+      "properties": {
+        "languageServerExample.maxNumberOfProblems": {
+          "scope": "resource",
+          "type": "number",
+          "default": 100,
+          "description": "Controls the maximum number of problems produced by the server."
+        },
+        "languageServerExample.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the language server."
+        }
+      }
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,mjs,mts}": "eslint --ignore-pattern .gitignore"
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -b",
+    "watch": "tsc -b -w",
+    "lint": "eslint",
+    "prepare": "husky",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+    "test": "sh ./scripts/e2e.sh",
+		"lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@commitlint/types": "^19.8.0",
+    "@eslint/js": "^9.23.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20",
+    "eslint": "^9.13.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "mocha": "^10.3.0",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.0",
+    "@stylistic/eslint-plugin": "^4.2.0"
+  }
+}

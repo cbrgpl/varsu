@@ -1,0 +1,17 @@
+{
+	"editor.insertSpaces": false,
+	"typescript.tsc.autoDetect": "off",
+	"typescript.preferences.quoteStyle": "single",
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit"
+	},
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.patterns": {
+		"tsconfig.json": "tsconfig.*.json, env.d.ts",
+		"vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*",
+		"package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig, .npmrc*, .stylelin*, commitlint*, .browserslistrc",
+		".gitlab-ci.yml": "Dockerfile",
+		".env.example": ".env*",
+		".gitignore": ".gitmodules"
+	}
+}
