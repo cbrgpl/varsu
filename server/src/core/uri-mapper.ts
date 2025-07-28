@@ -1,6 +1,6 @@
 const CONTAINER_LIFE_TIME = 1000 * 60 * 30;
 
-/** @description Contains doc_uri and mapped workspaec_uri.
+/** @description Contains doc_uri and mapped workspace_uri.
  *
  * Implements self-deletion logic
  */
