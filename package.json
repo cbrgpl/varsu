@@ -1,44 +1,78 @@
 {
-  "name": "css-lsp",
-  "description": "A language server to suggest css vars.",
+  "name": "varsu",
+  "displayName": "VarSu",
+  "bugs": {
+    "url": "https://github.com/cbrgpl/varsu/issues"
+  },
+  "homepage": "https://github.com/cbrgpl/varsu",
+  "description": "Extension that helps work with CSS variables in the editor",
   "author": "cbrgpl",
+  "publisher": "cbrgpl",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cbrgpl/lsp.git"
+    "url": "git@github.com:cbrgpl/varsu.git"
   },
-  "publisher": "",
-  "categories": [],
-  "keywords": [],
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "css",
+    "css variables",
+    "custom properties",
+    "autocomplete",
+    "themes",
+    "design tokens"
+  ],
   "engines": {
     "vscode": "^1.75.0"
   },
   "activationEvents": [
-    "onLanguage:plaintext"
+    "onLanguage:css",
+    "onLanguage:scss",
+    "onLanguage:less",
+    "onLanguage:postcss",
+    "onLanguage:vue",
+    "onLanguage:svelte",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescriptreact"
   ],
-  "main": "./client/out/extension",
+  "main": "./client/out/client/index",
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "Example configuration",
+      "title": "VarsU: CSS Variable Settings",
       "properties": {
-        "languageServerExample.maxNumberOfProblems": {
-          "scope": "resource",
-          "type": "number",
-          "default": 100,
-          "description": "Controls the maximum number of problems produced by the server."
-        },
-        "languageServerExample.trace.server": {
+        "varsu.sourceUrl": {
           "scope": "window",
           "type": "string",
-          "enum": [
-            "off",
-            "messages",
-            "verbose"
-          ],
-          "default": "off",
-          "description": "Traces the communication between VS Code and the language server."
+          "markdownDescription": "The full URL to the CSS file that contains `--css-vars`. Must include protocol (e.g., `https://`).",
+          "default": ""
+        },
+        "varsu.themes": {
+          "scope": "window",
+          "type": "array",
+          "description": "List of themes containing CSS variables. Each theme is parsed independently.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "required": [
+              "selector",
+              "name"
+            ],
+            "properties": {
+              "selector": {
+                "type": "string",
+                "description": "CSS selector that wraps the variables. For example: `:root` or `[data-theme=\"dark\"]`."
+              },
+              "name": {
+                "type": "string",
+                "description": "Human-readable name for the theme. Used for display or grouping."
+              }
+            }
+          }
         }
       }
     }
@@ -54,13 +88,14 @@
     "prepare": "husky",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
     "test": "sh ./scripts/e2e.sh",
-		"lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@commitlint/types": "^19.8.0",
     "@eslint/js": "^9.23.0",
+    "@stylistic/eslint-plugin": "^4.2.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20",
     "eslint": "^9.13.0",
@@ -69,7 +104,6 @@
     "lint-staged": "^15.5.0",
     "mocha": "^10.3.0",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.0",
-    "@stylistic/eslint-plugin": "^4.2.0"
+    "typescript-eslint": "^8.29.0"
   }
 }

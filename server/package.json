@@ -1,19 +1,28 @@
 {
-	"name": "css-lsp-server",
-	"description": "Server implementation",
-	"version": "1.0.0",
-	"author": "cbrgpl",
-	"license": "MIT",
-	"engines": {
-		"node": "*"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/cbrgpl/lsp.git"
-	},
-	"dependencies": {
-		"vscode-languageserver": "^9.0.1",
-		"vscode-languageserver-textdocument": "^1.0.11"
-	},
-	"scripts": {}
+  "name": "varsu-server",
+  "description": "Server implementation of VarSu",
+  "version": "1.0.0",
+  "author": "cbrgpl",
+  "license": "MIT",
+  "engines": {
+    "node": "*"
+  },
+  "publisher": "cbrgpl",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:cbrgpl/varsu.git"
+  },
+  "scripts": {
+    "mock-server:start": "ts-node ./src/mocks/mock-server.ts",
+    "compile:watch": "tsc -b -w"
+  },
+  "dependencies": {
+    "css-tree": "^3.1.0",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.11"
+  },
+  "devDependencies": {
+    "@types/css-tree": "^2.3.10",
+    "ts-node": "^10.9.2"
+  }
 }
