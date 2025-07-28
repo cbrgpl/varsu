@@ -26,4 +26,7 @@ export type IConfig = {
 };
 
 /** @description Resolves IConfig for document uri */
-export type FetchConfig = ( uri: string ) => Promise<{ uri: string, config: IConfig } >;
+export interface FetchConfig {
+  fn: ( uri: string ) => Promise<{ uri: string, config: IConfig } >;
+  error: { uri: string, err: unknown }
+}

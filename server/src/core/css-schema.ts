@@ -1,10 +1,11 @@
 import { CompletionItemKind, MarkupContent, type CompletionItem } from 'vscode-languageserver/node';
-import { getErrMessage } from '../utils/get-err-message';
 import * as csstree from 'css-tree';
 
 import type { ISuggestingSchema, ICssTheme, IConfig } from '../types';
 
 import { CssLocation } from 'css-tree';
+
+import * as lspConsole from '../utils/lsp-console';
 
 /** @description Contains metadata for css var */
 interface ICssVarMetadata {
@@ -77,12 +78,16 @@ ${ isVariableComplex ? node.metadata.value + '\n\n' : '' }${value}`;
     return Array.from(completions.values());
   }
 
-  private async _loadSchema( url: string, themes: ICssTheme[] ) {
-    const css = await this._fetchFileContent(url);
+  private async _loadSchema( url: string, themes: ICssTheme[] ): Promise<void> {
+    try {
+      const css = await this._fetchFileContent(url);
 
-    for(const theme of themes) {
-      const graph = this._createGraph(css, theme.selector);
-      this._themeGraphs.set(theme.name, graph);
+      for(const theme of themes) {
+        const graph = this._createGraph(css, theme.selector);
+        this._themeGraphs.set(theme.name, graph);
+      }
+    } catch(err) {
+      lspConsole.error(err);
     }
   }
 
@@ -92,15 +97,16 @@ ${ isVariableComplex ? node.metadata.value + '\n\n' : '' }${value}`;
       const res = await fetch( url, { method: 'GET' } );
 
       if(res.status === 200) {
-        const fileContent = await res.text();
-        return fileContent;
+        return await res.text();
       }
 
       throw new Error(`Unexpected response status "${res.status}" while loading css file content`);
     } catch(err) {
-      const msg = getErrMessage( err );
+      if(err instanceof Error && err.name === 'TypeError' && err.message === 'fetch failed') {
+        throw new Error(`Failed to fetch css file from url "${url}"`, { cause: err.cause });
+      }
 
-      throw new Error(`Caught an error while loading css-file:\n${msg}`, { cause: { originalErr: err }});
+      throw new Error(`Caught unknown error while loading css file`, { cause: err });
     }
   }
 

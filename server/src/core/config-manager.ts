@@ -4,6 +4,8 @@ import { capabilities } from '../utils/capability-utils';
 import { CssSchema } from './css-schema';
 import { FetchConfig, IConfig } from '../types';
 
+import * as lspConsole from '../utils/lsp-console';
+
 /** @description Container for configs */
 interface IConfigContainer {
   config: IConfig,
@@ -12,7 +14,7 @@ interface IConfigContainer {
 
 class ConfigManager {
   private _initParams: InitializeParams;
-  private _fetchConfig: FetchConfig;
+  private _fetchConfig: FetchConfig['fn'];
 
   /** @description Workspace uris used as keys */
   private _containers = new Map<string, IConfigContainer>();
@@ -20,7 +22,7 @@ class ConfigManager {
   /** @description loaded workspace uris */
   public readonly workspaceUris: string[];
 
-  constructor( fetchConfig: FetchConfig, initParams: InitializeParams ) {
+  constructor( fetchConfig: FetchConfig['fn'], initParams: InitializeParams ) {
     this._fetchConfig = fetchConfig;
     this._initParams = initParams;
     this.workspaceUris = this._getWorkspaceUris();
@@ -52,15 +54,13 @@ class ConfigManager {
 
     const rejects = results.filter( result => result.status === 'rejected' );
     if(rejects.length !== 0) {
-      console.group(`Failed to load ${rejects.length} configs`);
+
       rejects.forEach( result => {
-        console.log('---');
-        const uri = (result.reason as { uri: string}).uri;
-        console.log(uri);
-        console.log(result.reason.error);
-        console.log('---');
+        const {err, uri}: FetchConfig['error'] = result.reason;
+        lspConsole.warn(
+          new Error(`Failed to load configuration from "${uri}"`, { cause: err })
+        );
       } );
-      console.groupEnd();
     }
 
     const configs = results.filter( result =>  result.status === 'fulfilled' ).map( res => res.value );
@@ -74,7 +74,7 @@ class ConfigManager {
 }
 
 let manager: null | ConfigManager = null;
-export const initConfigManager = ( fetchConfig: FetchConfig, intiParams: InitializeParams) => {
+export const initConfigManager = ( fetchConfig: FetchConfig['fn'], intiParams: InitializeParams) => {
   manager = new ConfigManager( fetchConfig, intiParams );
   return { configManager: manager };
 };
