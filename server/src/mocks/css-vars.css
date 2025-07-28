@@ -1,0 +1,216 @@
+:root:has(.uikit_version) {
+  /* @deprecated --ttest2 @description хоба буба */
+  --test: calc(10px + var(--h1-fs)) - var(--t1);
+
+  --app-bgc: #f3f3f7;
+  --app-border: #e8e8ec;
+  --panel-bgc: #ffffff;
+  --panel-nested-bgc: #f9f9f9;
+  --panel-border: #e8e9ec;
+  --text-main: #323232;
+  /* @deprecated: use --content-text-secondary */
+  --text-secondary: #5b5c70;
+  --text-humble: #9c9eab;
+  --text-hubmle-light: #c3c3c3;
+  --text-light: #ebecef;
+  --link-bgc: rgba(34, 37, 52, 0.05);
+  --app-entity-label: #9c9eab;
+  --app-entity-bgc: #ffffff;
+  --app-entity-bgc-hover: #fbfbfb;
+  --abs-icon-fill: #757889;
+  --abs-storm-grey: #757889;
+  --abs-red: #f73333;
+  --abs-pink: #f95c5c;
+  --abs-pink-text: #f3f3f7;
+  --abs-orange: #fe8e43; 
+  --abs-yellow: #ffa500;
+  --abs-bright-blue: #546fff;
+  --abs-hippie-blue: #61a1b7;
+  --abs-green: #22ba59;
+  --abs-grey-light: #f0f0f0;
+  --basic-bgc: #fcfdfd;
+  --form-element-border: rgba(34, 37, 52, 0.1);
+  --scrollbar-thumb-bgc: #cdced5;
+  --or-modal__card_padding-base: 40px;
+
+  --font-default: "Halvar Mittelschrift", sans-serif;
+  --h1-fs: 32px;
+  --h1-lh: 100%;
+  --h2-fs: 24px;
+  --h2-lh: 100%;
+  --h3-fs: 20px;
+  --h3-lh: 100%;
+  --h3-lh-multiline: 120%;
+  --h4-fs: 18px;
+  --h4-lh: 18px;
+  --h4-lh-multiline: 122%;
+  --t1-fs: 16px;
+  --t1-lh: 16px;
+  --t1-lh-multiline: 20px;
+  --t2-fs: 14px;
+  --t2-lh: 14px;
+  --t2-lh-multiline: 18px;
+  --t3-fs: 13px;
+  --t3-lh: 14px;
+  --t3-lh-multiline: 16px;
+  --t4-fs: 12px;
+  --t4-lh: 12px;
+  --t4-lh-multiline: 16px;
+  --t5-fs: 11px;
+  --t5-lh: 12px;
+  --t1: var(--t1-fs)/var(--t1-lh) var(--font-default);
+  --t2: var(--t2-fs)/var(--t2-lh) var(--font-default);
+  --t3: var(--t3-fs)/var(--t3-lh) var(--font-default);
+  --t4: var(--t4-fs)/var(--t4-lh) var(--font-default);
+  --t5: var(--t5-fs)/var(--t5-lh) var(--font-default);
+  --h1: var(--h1-fs)/var(--h1-lh) var(--font-default);
+  --h2: var(--h2-fs)/var(--h2-lh) var(--font-default);
+  --h3: var(--h3-fs)/var(--h3-lh) var(--font-default);
+  --h4: var(--h4-fs)/var(--h4-lh) var(--font-default);
+
+  /* @deprecated */
+  --bg-border-primary: #dcdde4;
+  --bg-border-secondary: #edeef2;
+  --content-text-primary: #212230;
+  --content-text-secondary: var(--gray-60);
+  --content-text-tertiary: #acadb9;
+  --content-text-quaternary: #c9cad4;
+
+  --x0: 0;
+  --x1: 4px;
+  --x0_25: calc(var(--x1) * 0.25);
+  --x0_5: calc(var(--x1) * 0.5);
+  --x1_5: calc(var(--x1) * 1.5);
+  --x2: calc(var(--x1) * 2);
+  --x2_5: calc(var(--x1) * 2.5);
+  --x3: calc(var(--x1) * 3);
+  --x3_5: calc(var(--x1) * 3.5);
+  --x4: calc(var(--x1) * 4);
+  --x5: calc(var(--x1) * 5);
+  --x6: calc(var(--x1) * 6);
+  --x7: calc(var(--x1) * 7);
+  --x8: calc(var(--x1) * 8);
+  --x9: calc(var(--x1) * 9);
+  --x10: calc(var(--x1) * 10);
+
+  --content_padding: 60px;
+  --container_max-width: 640px;
+  --container-big_max-width: 1055px;
+  --container_padding: 40px;
+  --or-step-header__title_font-size: var(--h2-fs);
+  --or-step-header__title_color: var(--text-main);
+
+  --or-easing: ease;
+
+  /* OLD VARS */
+  /* TAB start */
+  --tab-text-color: #222534;
+  --active-tab-text-color: #222534;
+  --active-tab-bgc: #ffffff;
+  --tab-bgc-hover: #fbfcff;
+  --tab-bgc: var(--gray-4);
+  --create-tab-bgc: #dfdfe3;
+  --create-tab-bgc-hover: #f95c5c;
+  --border-color-tabs: #dddfe4;
+  /* TAB end */
+
+  /* START COLORS */
+  --header-bgc: #ffffff;
+  --card-bgc: #ffffff;
+  --modal-bgc: #ffffff;
+  --icon-fill-color: #757889;
+  --icon-fill-color-humble: #9c9eab;
+  --color-text-primary: #323232;
+  --color-text-secondary-green: #61c152;
+  --color-text-primary2: #343747;
+  --color-text-primary-black: #222534;
+  --color-text-secondary: #5b5e70;
+  --border-color-form-entity: #e0e0eb;
+  --or-radio-button-checkmark-bgc: #ffffff;
+  --action-button-bgc: #f73333;
+  --action-button-lightpink-bgc: #f95c5c;
+  --action-button-lightpink-text-color: var(--gray-4);
+  --action-button-text-color: #ffffff;
+  --action-button-lightgreen-bgc: #e9f8ee;
+  --action-button-lightgreen-text-color: #22ba59;
+  --button-grey-bgc: #e7e7e9;
+  --humble-button-bgc: #e6e6e6;
+  --humble-button-text-color: #9c9eab;
+  --page-panel-bgc: #ffffff;
+  --page-panel-nested-bgc: #f9f9f9;
+  --page-panel-selected-bgc: rgba(34, 37, 52, 0.05);
+  --page-panel-list-text-color: #464646;
+  --orange-text-color: #ff9204;
+  --orange-bgc: #f7e2d5;
+  --grey-light-color: #9c9eab;
+  --checkbox-text-color: #333333;
+  --checkbox-border-color: #dddee3;
+  --overlay-shadow-color: rgba(34, 37, 52, 0.95);
+  --grey-dark-bgc: #acaeb9;
+  --car-price-color-text: #000000;
+  --vertical-dots-color: #9c9eab;
+  /* END COLORS */
+}
+
+[data-theme="dark"] {
+ /* @deprecated --app-bgc-2
+    @description hello-world. This variable should replaced
+  */
+  --app-bgc: #141414;
+  --app-border: #222222;
+  --panel-bgc: #000000;
+  --panel-nested-bgc: #2b2b2b;
+  --panel-border: #242424;
+  --text-main: #aaaaaa;
+  --text-secondary: #848484;
+  --text-humble: #ffffff;
+  --text-hubmle-light: #8b8b8b;
+  --text-light: #ebecef;
+  --link-bgc: rgba(34, 37, 52, 0.05);
+  --app-entity-label: #9c9eab;
+  --app-entity-bgc: #191919;
+  --app-entity-bgc-hover: #2e2e2e;
+  --abs-icon-fill: #757889;
+  --abs-red: #f73333;
+  --abs-pink: #f95c5c;
+  --abs-pink-text: #f3f3f7;
+  --abs-orange: #fe8e43;
+  --abs-yellow: #ffa500;
+  --abs-bright-blue: #546fff;
+  --abs-hippie-blue: #61a1b7;
+  --abs-green: #22ba59;
+  --basic-bgc: #191919;
+  --form-element-border: rgba(34, 37, 52, 0.1);
+
+  /* СТАРЫЕ ПЕРЕМЕННЫЕ */
+  /* TAB start */
+  --tab-text-color: rgba(255, 255, 255, 0.5);
+  --active-tab-text-color: rgba(255, 255, 255, 0.8);
+  --active-tab-bgc: #242424;
+  --tab-bgc-hover: #3b1919;
+  --tab-bgc: #000000;
+  --create-tab-bgc: #3d3436;
+  --create-tab-bgc-hover: #5b0606;
+  --border-color-tabs: #242424;
+  /* TAB end */
+
+  /* APP start */
+  --header-bgc: #000000;
+  --card-bgc: #000000;
+  --modal-bgc: #000000;
+  --icon-fill-color: #757889;
+  --color-text-primary: #aaaaaa;
+  --color-text-secondary-green: #61c152;
+  --color-text-secondary: #848484;
+  --color-text-primary2: #d1d1d1;
+  --color-text-primary-black: #bcbcbc;
+  --page-panel-bgc: #191919;
+  --vertical-dots-color: #ffffff;
+  --humble-button-bgc: #202020;
+  --orange-bgc: #6f6a67;
+  --page-panel-nested-bgc: #2b2b2b;
+  --page-panel-selected-bgc: #000000;
+  --car-price-color-text: #ffffff;
+  --overlay-shadow-color: rgba(50, 50, 50, 0.8);
+  /* APP end */
+}
