@@ -16,7 +16,9 @@ import {
 import { capabilities } from './src/utils/capability-utils';
 import { getConfigManager, initConfigManager } from './src/core/config-manager';
 import { getUriMapper, initUriMapper } from './src/core/uri-mapper';
-import { FetchConfig } from './src/types';
+import { type FetchConfig } from './src/types';
+
+import * as lspConsole from './src/utils/lsp-console';
 
 import { EXT_NAME } from '../shared/constants';
 
@@ -24,9 +26,12 @@ import { EXT_NAME } from '../shared/constants';
 const COMPLETION_TRIGGER_REGEXP = /.*var\(([^)]+)?$/;
 
 const connection = createConnection(ProposedFeatures.all);
+
+lspConsole.initLspConsole(connection);
+
 const documents = new TextDocuments(TextDocument);
 
-const fetchConfig: FetchConfig = async ( uri ) => {
+const fetchConfig: FetchConfig['fn'] = async ( uri ) => {
   try {
     const config = await connection.workspace.getConfiguration({
       scopeUri: uri,
@@ -34,7 +39,7 @@ const fetchConfig: FetchConfig = async ( uri ) => {
     });
 
     if(config === null) {
-      throw new Error('Failed to get configuration; configuration is null');
+      throw new Error(`configuration for "${uri}" is null`);
     }
 
     return {
@@ -42,10 +47,12 @@ const fetchConfig: FetchConfig = async ( uri ) => {
       config
     };
   } catch(err) {
-    throw {
+    const errWrapper: FetchConfig['error'] = {
       uri: uri,
-      error: err
+      err
     };
+
+    throw errWrapper;
   }
 };
 
