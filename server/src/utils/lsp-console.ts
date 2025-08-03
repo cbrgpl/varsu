@@ -28,21 +28,40 @@ export const initLspConsole = ( connection: ls._Connection ) => {
   lspConsole.console = connection.console;
 };
 
-const errReplacerFactory = (omitStack: boolean) => ( key: string, val: unknown ) => {
-  if( val instanceof Error ) {
-    return { name: val.name, message: val.message, stack: omitStack ? undefined : val.stack, cause: val.cause };
+const addTabulation = ( value: string, level: number ) => value.split('\n').map(( line ) => `${'\t'.repeat(level)}${line}` ).join('\n');
+const prepareForProd = ( err: unknown, messages: string[] = [], level = 0 ): string => {
+  if(err instanceof Error) {
+    const msg = addTabulation(`[${err.name}]: ${err.message}`, level);
+    messages.push(msg);
+
+    if(err.cause instanceof Error) {
+      prepareForProd(err.cause, messages, level + 1);
+    } else {
+      messages.push(addTabulation(`[cause]: ${JSON.stringify(err.cause)}`, level + 1));
+    }
+
+    return messages.join('\n');
   }
+
+  return JSON.stringify(err, null, 2);
+};
+
+const errReplacer = ( key: string, val: unknown ) => {
+  if( val instanceof Error ) {
+    return { name: val.name, message: val.message, stack: val.stack, cause: val.cause };
+  }
+
   else { return val; }
 };
 
-const stringifyUnknown = ( unknown: unknown, omitStack = false, space = 2 ) => JSON.stringify(unknown, errReplacerFactory(omitStack) , space);
+const stringifyUnknown = ( unknown: unknown, space = 2 ) =>  isDebugMode() ? JSON.stringify(unknown, errReplacer , space).replaceAll('\\n', '\n') : prepareForProd(unknown);
 
 export const error = ( err: unknown ) => {
   if(isDebugMode()) {
     console.error(stringifyUnknown(err));
   }
 
-  lspConsole.console?.error(stringifyUnknown(err, true));
+  lspConsole.console?.error(stringifyUnknown(err));
 };
 
 export const info = ( value: string ) => {
@@ -55,7 +74,7 @@ export const warn = ( value: unknown ) => {
     console.warn(stringifyUnknown(value));
   }
 
-  lspConsole.console?.warn(stringifyUnknown(value, true));
+  lspConsole.console?.warn(stringifyUnknown(value));
 };
 
 
