@@ -56,7 +56,7 @@ export class CssSchema implements ISuggestingSchema {
           if(!node) { continue; }
 
           const isFirstThemeOccurrence = !completions.has(key);
-          // NOTE Shows @description and @deprecated in completion ONLY ONCE FROM FIRST THEME CONTAINING VARIABLE
+          // NOTE Shows @description and @deprecated in completion ONLY ONCE FROM THE FIRST THEME CONTAINING VARIABLE
           if(isFirstThemeOccurrence) {
             completion.detail = node.metadata.description
             ;(completion.documentation as MarkupContent).value += node.metadata.deprecated ? `\`[deprecated]: ${node.metadata.deprecatedDescription}\`\n\n` : "\n\n";
@@ -93,7 +93,7 @@ ${ isVariableComplex ? node.metadata.value + '\n\n' : '' }${value}`;
 
   private async _fetchFileContent( url: string ): Promise<string> {
     try {
-      // protocol MUST BE defined; https://some.domain.com, http://localhost:3005
+      // NOTE protocol MUST BE defined; https://some.domain.com, http://localhost:3005
       const res = await fetch( url, { method: 'GET' } );
 
       if(res.status === 200) {

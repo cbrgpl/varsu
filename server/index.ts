@@ -57,7 +57,6 @@ const fetchConfig: FetchConfig['fn'] = async ( uri ) => {
 };
 
 connection.onInitialize(async (params: InitializeParams) => {
-  console.log('onInitialize');
   const hasConfigCapability = Boolean(
     params.capabilities.workspace && params.capabilities.workspace.configuration
   );
@@ -74,8 +73,6 @@ connection.onInitialize(async (params: InitializeParams) => {
     fetchConfig,
     params );
 
-  console.log(configManager);
-
   initUriMapper( configManager.workspaceUris );
 
   const result: InitializeResult = {
@@ -85,10 +82,6 @@ connection.onInitialize(async (params: InitializeParams) => {
         resolveProvider: true,
         triggerCharacters: ['(', '-'],
       },
-      // diagnosticProvider: {
-      //   interFileDependencies: false,
-      //   workspaceDiagnostics: false
-      // }
     }
   };
 
@@ -107,16 +100,6 @@ connection.onInitialize(async (params: InitializeParams) => {
 connection.onInitialized(() => {
   const { configManager } = getConfigManager();
   configManager.load();
-
-  // if (hasCapability('configuration')) {
-  //   // Register for all configuration changes.
-  //   connection.client.register(DidChangeConfigNotification.type, undefined);
-  // }
-  // if (hasCapability('workspaceFolder')) {
-  //   connection.workspace.onDidChangeWorkspaceFolders(_event => {
-  //     connection.console.log('Workspace folder change event received.');
-  //   });
-  // }
 });
 
 documents.onDidClose(e => {
@@ -132,7 +115,6 @@ documents.onDidOpen(( e ) => {
 connection.onCompletion(
   (_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
     const docUri = _textDocumentPosition.textDocument.uri;
-    console.log(docUri);
 
     const { uriMapper } = getUriMapper();
     const workspaceUri = uriMapper.getWorkspaceUri( docUri );
@@ -156,8 +138,6 @@ connection.onCompletion(
       start: { line: position.line, character: 0 },
       end: position
     });
-
-    console.log(COMPLETION_TRIGGER_REGEXP.test(textBeforeCursor), position, textBeforeCursor);
 
     const inputedVar = textBeforeCursor.match(COMPLETION_TRIGGER_REGEXP);
 
