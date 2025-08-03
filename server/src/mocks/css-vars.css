@@ -1,4 +1,7 @@
 :root:has(.uikit_version) {
+  --var1: calc(10px + var(--cyclical-var));
+  --cyclical-var: calc(var(--var1) - 10px);
+
   /* @deprecated --ttest2 @description хоба буба */
   --test: calc(10px + var(--h1-fs)) - var(--t1);
 

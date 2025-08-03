@@ -2,6 +2,7 @@
 // [it is formule if calc is present] calc( var(--var-name) * N ) ->  var(--var-name) * N -> schema['--var-name'] * N -> applyUnit(removeUnit(schema['--var-name']) * N)
 
 export default {
+
   '--variable-1': '10px',
   '--button-width': '20px',
   '--h1-fs': '32px',
