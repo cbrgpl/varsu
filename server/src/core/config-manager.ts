@@ -1,20 +1,18 @@
-import { type InitializeParams } from 'vscode-languageserver/node';
-import { capabilities } from '../utils/capability-utils';
-
-import { CssSchema } from './css-schema';
-import { FetchConfig, IConfig } from '../types';
-
+import * as ls from 'vscode-languageserver/node';
+import * as capabilities from '../utils/capability-utils';
+import * as cssSchema from './css-schema';
+import * as types from './../types';
 import * as lspConsole from '../utils/lsp-console';
 
 /** @description Container for configs */
 interface IConfigContainer {
-  config: IConfig,
-  cssSchema: CssSchema | null
+  config: types.IConfig,
+  cssSchema: cssSchema.CssSchema | null
 }
 
 class ConfigManager {
-  private _initParams: InitializeParams;
-  private _fetchConfig: FetchConfig['fn'];
+  private _initParams: ls.InitializeParams;
+  private _fetchConfig: types.FetchConfig['fn'];
 
   /** @description Workspace uris used as keys */
   private _containers = new Map<string, IConfigContainer>();
@@ -22,7 +20,7 @@ class ConfigManager {
   /** @description loaded workspace uris */
   public readonly workspaceUris: string[];
 
-  constructor( fetchConfig: FetchConfig['fn'], initParams: InitializeParams ) {
+  constructor( fetchConfig: types.FetchConfig['fn'], initParams: ls.InitializeParams ) {
     this._fetchConfig = fetchConfig;
     this._initParams = initParams;
     this.workspaceUris = this._getWorkspaceUris();
@@ -34,7 +32,7 @@ class ConfigManager {
   }
 
   private _getWorkspaceUris(): string[] {
-    if(capabilities.has('workspaceFolder')) {
+    if(capabilities.capabilities.has('workspaceFolder')) {
       return this._initParams.workspaceFolders!.map( folder => folder.uri );
     } else if(this._initParams.rootUri) {
       /** @deprecated */
@@ -56,7 +54,7 @@ class ConfigManager {
     if(rejects.length !== 0) {
 
       rejects.forEach( result => {
-        const {err, uri}: FetchConfig['error'] = result.reason;
+        const {err, uri}: types.FetchConfig['error'] = result.reason;
         lspConsole.warn(
           new Error(`Failed to load configuration from "${uri}"`, { cause: err })
         );
@@ -67,14 +65,14 @@ class ConfigManager {
     for(const { config, uri } of configs ) {
       this._containers.set(uri, {
         'config': config,
-        cssSchema: new CssSchema(config)
+        cssSchema: new cssSchema.CssSchema(config)
       });
     }
   }
 }
 
 let manager: null | ConfigManager = null;
-export const initConfigManager = ( fetchConfig: FetchConfig['fn'], intiParams: InitializeParams) => {
+export const initConfigManager = ( fetchConfig: types.FetchConfig['fn'], intiParams: ls.InitializeParams) => {
   manager = new ConfigManager( fetchConfig, intiParams );
   return { configManager: manager };
 };

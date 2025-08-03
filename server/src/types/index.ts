@@ -1,9 +1,9 @@
 import { EXT_NAME } from '../../../shared/constants';
-import { type CompletionItem } from 'vscode-languageserver';
+import * as ls from 'vscode-languageserver/node';
 
 /** @description Schema which suggests something */
 export interface ISuggestingSchema {
-  getCompletions( valueToFilter: string ): CompletionItem[] | null
+  getCompletions( valueToFilter: string ): ls.CompletionItem[] | null
 }
 
 /** @description Css theme data */

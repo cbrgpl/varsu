@@ -1,11 +1,11 @@
-import type { _Connection } from 'vscode-languageserver';
+import type * as ls from 'vscode-languageserver/node';
 
 const isDebugMode = () => process.env.VSCODE_DEBUG_MODE === 'true';
 
 const lspConsole = new class {
-  private _console: _Connection['console'] | null = null;
+  private _console: ls._Connection['console'] | null = null;
 
-  public set console(v: _Connection['console'] | null) {
+  public set console(v: ls._Connection['console'] | null) {
     if(this._console === null) {
       this._console = v;
     } else {
@@ -13,7 +13,7 @@ const lspConsole = new class {
     }
   }
 
-  public get console(): _Connection['console'] | null {
+  public get console(): ls._Connection['console'] | null {
     if(this._console) {
       return this._console;
     } else if(isDebugMode()) {
@@ -24,7 +24,7 @@ const lspConsole = new class {
   }
 };
 
-export const initLspConsole = ( connection: _Connection ) => {
+export const initLspConsole = ( connection: ls._Connection ) => {
   lspConsole.console = connection.console;
 };
 
