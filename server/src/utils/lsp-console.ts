@@ -51,7 +51,7 @@ export const info = ( value: string ) => {
 /** @description value could be an error */
 export const warn = ( value: unknown ) => {
   if(process.env.VSCODE_DEBUG_MODE) {
-    console.error(stringifyUnknown(value));
+    console.warn(stringifyUnknown(value));
   }
 
   lspConsole.console?.warn(stringifyUnknown(value, true));
