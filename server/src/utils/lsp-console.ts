@@ -1,5 +1,7 @@
 import type { _Connection } from 'vscode-languageserver';
 
+const isDebugMode = () => process.env.VSCODE_DEBUG_MODE === 'true';
+
 const lspConsole = new class {
   private _console: _Connection['console'] | null = null;
 
@@ -14,7 +16,7 @@ const lspConsole = new class {
   public get console(): _Connection['console'] | null {
     if(this._console) {
       return this._console;
-    } else if(process.env.VSCODE_DEBUG_MODE) {
+    } else if(isDebugMode()) {
       console.error('consoleWrapper.console is accessed before initialization');
     }
 
@@ -36,10 +38,9 @@ const errReplacerFactory = (omitStack: boolean) => ( key: string, val: unknown )
 const stringifyUnknown = ( unknown: unknown, omitStack = false, space = 2 ) => JSON.stringify(unknown, errReplacerFactory(omitStack) , space);
 
 export const error = ( err: unknown ) => {
-  if(process.env.VSCODE_DEBUG_MODE) {
+  if(isDebugMode()) {
     console.error(stringifyUnknown(err));
   }
-
 
   lspConsole.console?.error(stringifyUnknown(err, true));
 };
@@ -50,7 +51,7 @@ export const info = ( value: string ) => {
 
 /** @description value could be an error */
 export const warn = ( value: unknown ) => {
-  if(process.env.VSCODE_DEBUG_MODE) {
+  if(isDebugMode()) {
     console.error(stringifyUnknown(value));
   }
 
