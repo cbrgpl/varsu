@@ -8,7 +8,7 @@
 		"sourceMap": true,
 		"noEmit": true
 	},
-	"include": ["*.ts"],
+	"include": ["*.ts", "shared/env.d.ts"],
 	"exclude": [
 		"node_modules",
 		".vscode-test"
