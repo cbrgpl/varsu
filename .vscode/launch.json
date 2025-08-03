@@ -1,0 +1,35 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+
+		{
+			"type": "extensionHost",
+			"request": "launch",
+			"name": "Launch Client",
+			"runtimeExecutable": "${execPath}",
+			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
+			"outFiles": [
+				"${workspaceRoot}/client/out/**/*.js",
+				"${workspaceRoot}/server/out/**/*.js"
+			],
+			"autoAttachChildProcesses": true,
+			"preLaunchTask": "on-debugging",
+			"postDebugTask": "on-debugging-terminate",
+			"env": {
+        "VSCODE_DEBUG_MODE": "true"
+      }
+		},
+		{
+			"name": "Language Server E2E Test",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${execPath}",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceRoot}",
+				"--extensionTestsPath=${workspaceRoot}/client/out/test/index",
+				"${workspaceRoot}/client/testFixture"
+			],
+			"outFiles": ["${workspaceRoot}/client/out/test/**/*.js"]
+		}
+	]
+}
