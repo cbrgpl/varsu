@@ -7,14 +7,14 @@ import * as capabilities from './src/utils/capability-utils';
 import * as configManagerNm from './src/core/config-manager';
 import * as uriMapperNm from './src/core/uri-mapper';
 import * as types from './src/types';
-import * as lspConsole from './src/utils/lsp-console';
+import { logger } from './src/utils/logger';
 
 /** @description matches at least var( at most var(..., where ... inputed var name */
 const COMPLETION_TRIGGER_REGEXP = /.*var\(([^)]+)?$/;
 
 const connection = ls.createConnection(ls.ProposedFeatures.all);
 
-lspConsole.initLspConsole(connection);
+logger.init(connection);
 
 const documents = new ls.TextDocuments(lstd.TextDocument);
 
@@ -58,7 +58,8 @@ connection.onInitialize(async (params: ls.InitializeParams) => {
 
   const { configManager } = configManagerNm.initConfigManager(
     fetchConfig,
-    params );
+    params
+  );
 
   uriMapperNm.initUriMapper( configManager.workspaceUris );
 

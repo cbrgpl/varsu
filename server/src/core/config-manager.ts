@@ -2,7 +2,7 @@ import * as ls from 'vscode-languageserver/node';
 import * as capabilities from '../utils/capability-utils';
 import * as cssSchema from './css-schema';
 import * as types from './../types';
-import * as lspConsole from '../utils/lsp-console';
+import { logger } from '../utils/logger';
 
 /** @description Container for configs */
 interface IConfigContainer {
@@ -55,7 +55,7 @@ class ConfigManager {
 
       rejects.forEach( result => {
         const {err, uri}: types.FetchConfig['error'] = result.reason;
-        lspConsole.warn(
+        logger.warn(
           new Error(`Failed to load configuration from "${uri}"`, { cause: err })
         );
       } );
