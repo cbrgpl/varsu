@@ -16,8 +16,6 @@ export function activate(context: vscode.ExtensionContext) {
     path.join('server', 'out', 'server', 'index.js')
   );
 
-  console.log(serverModule);
-
   const serverOptions: ServerOptions = {
     run: { module: serverModule, transport: TransportKind.ipc },
     debug: {
