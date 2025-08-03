@@ -204,7 +204,7 @@ export class DependencyGraph {
     }
   }
 
-  private _resolveVar( variable: ICssVarMetadata ) {
+  private _resolveVar( variable: ICssVarMetadata, toBeResolved: Record<string, true> = {} ) {
     // resolved recursively while resolving another var
     if(this.nodes.has(variable.name)) {
       return;
@@ -217,18 +217,24 @@ export class DependencyGraph {
 
     if(usedVars.length) {
       for(const usedVar of usedVars ) {
+
+        const circularDep = usedVarsNames.find( (name) => toBeResolved[name] ) ?? null;
+        if( circularDep ) {
+          lspConsole.warn( new Error(`Circular dependency for "${circularDep}" and "${node.metadata.name}" is detected`, { cause: [  node.metadata.name, circularDep ] }));
+          return;
+        }
+
         if(!this.nodes.get(usedVar.name)) {
-          this._resolveVar(usedVar);
+          this._resolveVar(usedVar, {...toBeResolved, [node.metadata.name]: true });
         }
 
-        const usedVarnode = this.nodes.get(usedVar.name)!;
-        node.dependsOn.add(usedVarnode);
-        usedVarnode.dependents.add(node);
+        const usedVarnode = this.nodes.get(usedVar.name);
 
-        if(node.dependsOn.has(usedVarnode) && usedVarnode.dependsOn.has(node)) {
-          console.warn(`circular dependency of "${node.metadata.name}" and "${usedVarnode.metadata.name}"`);
-          usedVarnode.dependsOn.delete(node);
+        if(usedVarnode) {
+          node.dependsOn.add(usedVarnode);
+          usedVarnode.dependents.add(node);
         }
+
 
       }
     }
