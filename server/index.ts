@@ -1,41 +1,28 @@
-import {
-  createConnection,
-  TextDocuments,
-  ProposedFeatures,
-  InitializeParams,
-  CompletionItem,
-  TextDocumentPositionParams,
-  TextDocumentSyncKind,
-  InitializeResult,
-} from 'vscode-languageserver/node';
+import * as ls from 'vscode-languageserver/node';
+import * as lstd from 'vscode-languageserver-textdocument';
 
-import {
-  TextDocument
-} from 'vscode-languageserver-textdocument';
+import * as constants from '../shared/constants';
 
-import { capabilities } from './src/utils/capability-utils';
-import { getConfigManager, initConfigManager } from './src/core/config-manager';
-import { getUriMapper, initUriMapper } from './src/core/uri-mapper';
-import { type FetchConfig } from './src/types';
-
+import * as capabilities from './src/utils/capability-utils';
+import * as configManagerNm from './src/core/config-manager';
+import * as uriMapperNm from './src/core/uri-mapper';
+import * as types from './src/types';
 import * as lspConsole from './src/utils/lsp-console';
-
-import { EXT_NAME } from '../shared/constants';
 
 /** @description matches at least var( at most var(..., where ... inputed var name */
 const COMPLETION_TRIGGER_REGEXP = /.*var\(([^)]+)?$/;
 
-const connection = createConnection(ProposedFeatures.all);
+const connection = ls.createConnection(ls.ProposedFeatures.all);
 
 lspConsole.initLspConsole(connection);
 
-const documents = new TextDocuments(TextDocument);
+const documents = new ls.TextDocuments(lstd.TextDocument);
 
-const fetchConfig: FetchConfig['fn'] = async ( uri ) => {
+const fetchConfig: types.FetchConfig['fn'] = async ( uri ) => {
   try {
     const config = await connection.workspace.getConfiguration({
       scopeUri: uri,
-      section: EXT_NAME
+      section: constants.EXT_NAME
     });
 
     if(config === null) {
@@ -47,7 +34,7 @@ const fetchConfig: FetchConfig['fn'] = async ( uri ) => {
       config
     };
   } catch(err) {
-    const errWrapper: FetchConfig['error'] = {
+    const errWrapper: types.FetchConfig['error'] = {
       uri: uri,
       err
     };
@@ -56,7 +43,7 @@ const fetchConfig: FetchConfig['fn'] = async ( uri ) => {
   }
 };
 
-connection.onInitialize(async (params: InitializeParams) => {
+connection.onInitialize(async (params: ls.InitializeParams) => {
   const hasConfigCapability = Boolean(
     params.capabilities.workspace && params.capabilities.workspace.configuration
   );
@@ -64,20 +51,20 @@ connection.onInitialize(async (params: InitializeParams) => {
     params.capabilities.workspace && params.capabilities.workspace.workspaceFolders
   );
 
-  capabilities.set(
+  capabilities.capabilities.set(
     hasConfigCapability,
     hasWorkspaceFolderCapability,
   );
 
-  const { configManager } = initConfigManager(
+  const { configManager } = configManagerNm.initConfigManager(
     fetchConfig,
     params );
 
-  initUriMapper( configManager.workspaceUris );
+  uriMapperNm.initUriMapper( configManager.workspaceUris );
 
-  const result: InitializeResult = {
+  const result: ls.InitializeResult = {
     capabilities: {
-      textDocumentSync: TextDocumentSyncKind.Incremental,
+      textDocumentSync: ls.TextDocumentSyncKind.Incremental,
       completionProvider: {
         resolveProvider: true,
         triggerCharacters: ['(', '-'],
@@ -85,7 +72,7 @@ connection.onInitialize(async (params: InitializeParams) => {
     }
   };
 
-  if ( capabilities.has('workspaceFolder') ) {
+  if ( capabilities.capabilities.has('workspaceFolder') ) {
     result.capabilities.workspace = {
       workspaceFolders: {
         supported: true
@@ -98,30 +85,30 @@ connection.onInitialize(async (params: InitializeParams) => {
 
 
 connection.onInitialized(() => {
-  const { configManager } = getConfigManager();
+  const { configManager } = configManagerNm.getConfigManager();
   configManager.load();
 });
 
 documents.onDidClose(e => {
-  const { uriMapper } = getUriMapper();
+  const { uriMapper } = uriMapperNm.getUriMapper();
   uriMapper.scheduleRemoval( e.document.uri );
 });
 
 documents.onDidOpen(( e ) => {
-  const { uriMapper } = getUriMapper();
+  const { uriMapper } = uriMapperNm.getUriMapper();
   uriMapper.trackDocument(e.document.uri);
 });
 
 connection.onCompletion(
-  (_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
+  (_textDocumentPosition: ls.TextDocumentPositionParams): ls.CompletionItem[] => {
     const docUri = _textDocumentPosition.textDocument.uri;
 
-    const { uriMapper } = getUriMapper();
+    const { uriMapper } = uriMapperNm.getUriMapper();
     const workspaceUri = uriMapper.getWorkspaceUri( docUri );
 
     if(!workspaceUri) { return []; }
 
-    const { configManager } = getConfigManager();
+    const { configManager } = configManagerNm.getConfigManager();
     const container = configManager.fetchConfigContainer( workspaceUri );
 
     if(!container?.cssSchema) {

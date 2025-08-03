@@ -1,10 +1,6 @@
-import { CompletionItemKind, MarkupContent, type CompletionItem } from 'vscode-languageserver/node';
+import * as ls from 'vscode-languageserver/node';
 import * as csstree from 'css-tree';
-
-import type { ISuggestingSchema, ICssTheme, IConfig } from '../types';
-
-import { CssLocation } from 'css-tree';
-
+import * as types from '../types';
 import * as lspConsole from '../utils/lsp-console';
 
 /** @description Contains metadata for css var */
@@ -17,7 +13,7 @@ interface ICssVarMetadata {
 }
 
 /** @description Config params used by css schema */
-type CssSchemaConfig = Pick<IConfig, 'sourceUrl' | "themes">;
+type CssSchemaConfig = Pick<types.IConfig, 'sourceUrl' | "themes">;
 
 /** @description used for searching of "@deprecated" flag for css var */
 const CSS_DEPRECATED_KEYWORD = "@deprecated";
@@ -27,7 +23,7 @@ const CSS_DESCRIPTION_KEYWORD = "@description";
 
 const CSS_KEYWORD_VALUE_REGEXP = /.+?(?=(@deprecated|@description|$))/;
 
-export class CssSchema implements ISuggestingSchema {
+export class CssSchema implements types.ISuggestingSchema {
   /** @description Keys are theme names */
   private _themeGraphs = new Map<string, DependencyGraph>();
 
@@ -35,17 +31,17 @@ export class CssSchema implements ISuggestingSchema {
     this._loadSchema( config.sourceUrl, config.themes );
   }
 
-  getCompletions( partialVarName: string ): CompletionItem[] | null {
+  getCompletions( partialVarName: string ): ls.CompletionItem[] | null {
     const inputedVarName = '--' + partialVarName.replaceAll('-', '');
 
-    const completions = new Map<string, CompletionItem>();
+    const completions = new Map<string, ls.CompletionItem>();
 
     for(const [ theme, graph ] of this._themeGraphs.entries()) {
       for(const key of graph.nodes.keys()) {
         if(key.startsWith(inputedVarName)) {
-          const completion: CompletionItem = completions.get(key) ?? {
+          const completion: ls.CompletionItem = completions.get(key) ?? {
             label: key,
-            kind: CompletionItemKind.Variable,
+            kind: ls.CompletionItemKind.Variable,
             documentation: {
               kind: 'markdown',
               value: ''
@@ -59,7 +55,7 @@ export class CssSchema implements ISuggestingSchema {
           // NOTE Shows @description and @deprecated in completion ONLY ONCE FROM THE FIRST THEME CONTAINING VARIABLE
           if(isFirstThemeOccurrence) {
             completion.detail = node.metadata.description
-            ;(completion.documentation as MarkupContent).value += node.metadata.deprecated ? `\`[deprecated]: ${node.metadata.deprecatedDescription}\`\n\n` : "\n\n";
+            ;(completion.documentation as ls.MarkupContent).value += node.metadata.deprecated ? `\`[deprecated]: ${node.metadata.deprecatedDescription}\`\n\n` : "\n\n";
           }
 
           const value = node.value;
@@ -67,7 +63,7 @@ export class CssSchema implements ISuggestingSchema {
           /** @description If value uses another value value will be different */
           const isVariableComplex = value !== node.metadata.value;
 
-          ;(completion.documentation as MarkupContent).value += `\n\n**\`${theme}:\`**\n
+          ;(completion.documentation as ls.MarkupContent).value += `\n\n**\`${theme}:\`**\n
 ${ isVariableComplex ? node.metadata.value + '\n\n' : '' }${value}`;
 
           completions.set(key, completion);
@@ -78,7 +74,7 @@ ${ isVariableComplex ? node.metadata.value + '\n\n' : '' }${value}`;
     return Array.from(completions.values());
   }
 
-  private async _loadSchema( url: string, themes: ICssTheme[] ): Promise<void> {
+  private async _loadSchema( url: string, themes: types.ICssTheme[] ): Promise<void> {
     try {
       const css = await this._fetchFileContent(url);
 
@@ -112,7 +108,7 @@ ${ isVariableComplex ? node.metadata.value + '\n\n' : '' }${value}`;
 
   private _createGraph( css: string, selector: string ) {
     /** @description key is end str number */
-    const comments = new Map<number, { value: string, loc: CssLocation}>();
+    const comments = new Map<number, { value: string, loc: csstree.CssLocation}>();
     const ast = csstree.parse(css, { positions: true, onComment(value, loc) {
       if(value.includes(CSS_DEPRECATED_KEYWORD) || value.includes(CSS_DESCRIPTION_KEYWORD)) {
         comments.set(loc.end.line, { value, loc });
