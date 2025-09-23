@@ -1,13 +1,13 @@
-import * as ls from 'vscode-languageserver/node';
+import * as ls from 'vscode-languageserver/node.js';
 import * as lstd from 'vscode-languageserver-textdocument';
 
-import * as constants from '../shared/constants';
+import * as constants from './../shared/constants.js';
 
-import * as capabilities from './src/utils/capability-utils';
-import * as configManagerNm from './src/core/config-manager';
-import * as uriMapperNm from './src/core/uri-mapper';
-import * as types from './src/types';
-import { logger } from './src/utils/logger';
+import * as capabilities from './src/utils/capability-utils.js';
+import * as configManagerNm from './src/core/config-manager.js';
+import * as uriMapperNm from './src/core/uri-mapper.js';
+import * as types from './src/types/index.js';
+import { logger } from './src/utils/logger.js';
 
 /** @description matches at least var( at most var(..., where ... inputed var name */
 const COMPLETION_TRIGGER_REGEXP = /.*var\(([^)]+)?$/;

@@ -1,7 +1,7 @@
-import * as ls from 'vscode-languageserver/node';
+import * as ls from 'vscode-languageserver/node.js';
 import * as csstree from 'css-tree';
-import * as types from '../types';
-import { logger } from '../utils/logger';
+import * as types from '../types/index.js';
+import { logger } from '../utils/logger.js';
 
 /** @description Contains metadata for css var */
 interface ICssVarMetadata {

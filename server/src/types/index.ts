@@ -1,5 +1,5 @@
-import { EXT_NAME } from '../../../shared/constants';
-import * as ls from 'vscode-languageserver/node';
+import { EXT_NAME } from '../../../shared/constants.js';
+import * as ls from 'vscode-languageserver/node.js';
 
 /** @description Schema which suggests something */
 export interface ISuggestingSchema {
