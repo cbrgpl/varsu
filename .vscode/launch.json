@@ -16,7 +16,8 @@
 			"preLaunchTask": "on-debugging",
 			"postDebugTask": "on-debugging-terminate",
 			"env": {
-        "VSCODE_DEBUG_MODE": "true"
+        "VSCODE_DEBUG_MODE": "true",
+				"VSCODE_LOG_LEVEL": "FULL"
       }
 		},
 		{

@@ -1,8 +1,8 @@
-import * as ls from 'vscode-languageserver/node';
-import * as capabilities from '../utils/capability-utils';
-import * as cssSchema from './css-schema';
-import * as types from './../types';
-import * as lspConsole from '../utils/lsp-console';
+import * as ls from 'vscode-languageserver/node.js';
+import * as capabilities from '../utils/capability-utils.js';
+import * as cssSchema from './css-schema.js';
+import * as types from './../types/index.js';
+import { logger } from '../utils/logger.js';
 
 /** @description Container for configs */
 interface IConfigContainer {
@@ -55,7 +55,7 @@ class ConfigManager {
 
       rejects.forEach( result => {
         const {err, uri}: types.FetchConfig['error'] = result.reason;
-        lspConsole.warn(
+        logger.warn(
           new Error(`Failed to load configuration from "${uri}"`, { cause: err })
         );
       } );

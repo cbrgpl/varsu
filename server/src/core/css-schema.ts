@@ -1,7 +1,7 @@
-import * as ls from 'vscode-languageserver/node';
+import * as ls from 'vscode-languageserver/node.js';
 import * as csstree from 'css-tree';
-import * as types from '../types';
-import * as lspConsole from '../utils/lsp-console';
+import * as types from '../types/index.js';
+import { logger } from '../utils/logger.js';
 
 /** @description Contains metadata for css var */
 interface ICssVarMetadata {
@@ -86,7 +86,7 @@ ${ isVariableComplex ? node.metadata.value + '\n\n' : '' }${value}`;
         this._themeGraphs.set(theme.name, graph);
       }
     } catch(err) {
-      lspConsole.error(err);
+      logger.error(err);
     }
   }
 
@@ -237,7 +237,7 @@ export class DependencyGraph {
 
         const circularDep = usedVarsNames.find( (name) => toBeResolved[name] ) ?? null;
         if( circularDep ) {
-          lspConsole.warn( new Error(`Circular dependency for "${circularDep}" and "${node.metadata.name}" is detected`, { cause: [  node.metadata.name, circularDep ] }));
+          logger.warn( new Error(`Circular dependency for "${circularDep}" and "${node.metadata.name}" is detected`, { cause: [ node.metadata.name, circularDep ] }));
           return;
         }
 
