@@ -58,14 +58,14 @@ class UriMapper {
 
   private _findWorkspaceUri( docUri: string ): string | null {
     // If docUri contains workspaceUri, it means doc placed inside workspace
-    const matchingWorkspaces = this._workspaceUris.filter( workspaceUri => docUri.includes( workspaceUri ));
-
-    if(matchingWorkspaces.length === 0) {
-      return null;
+    let closestWorkspaceUri = '';
+    for(const workspaceUri of this._workspaceUris) {
+      if(docUri.includes( workspaceUri ) && workspaceUri.includes(closestWorkspaceUri)) {
+        closestWorkspaceUri = workspaceUri;
+      }
     }
 
-    // Return last because workspaces could contains each other. For example submodules in git
-    return matchingWorkspaces.at(-1)!;
+    return closestWorkspaceUri || null;
   }
 
   private _removeContainer( workspaceContainer: UriMappingEntry ): void {
