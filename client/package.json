@@ -1,5 +1,6 @@
 {
   "name": "varsu-client",
+  "type": "module",
   "description": "Client implementation of VarSu",
   "author": "cbrgpl",
   "license": "MIT",

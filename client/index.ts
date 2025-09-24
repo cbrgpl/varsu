@@ -6,8 +6,8 @@ import {
   LanguageClientOptions,
   ServerOptions,
   TransportKind
-} from 'vscode-languageclient/node';
-import { EXT_NAME } from '../shared/constants';
+} from 'vscode-languageclient/node.js';
+import { EXT_NAME } from '../shared/constants.js';
 
 let client: LanguageClient;
 
