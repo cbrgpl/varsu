@@ -29,7 +29,7 @@
     },
     {
       "label": "on-debugging",
-      "dependsOn": ["watch", "mock-server"],
+      "dependsOn": ["mock-server"],
       "dependsOrder": "parallel"
     },
     {
