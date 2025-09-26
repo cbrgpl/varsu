@@ -35,7 +35,7 @@ export class CssSchema implements types.ISuggestingSchema {
   }
 
   getCompletions( partialVarName: string ): ls.CompletionItem[] | null {
-    const inputedVarName = '--' + partialVarName.replaceAll('-', '');
+    const inputedVarName = '--' + partialVarName.replace(/^--/, '');
 
     const completions = new Map<string, ls.CompletionItem>();
 
