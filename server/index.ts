@@ -12,6 +12,36 @@ import { logger } from './src/utils/logger.js';
 /** @description matches at least var( at most var(..., where ... inputed var name */
 const COMPLETION_TRIGGER_REGEXP = /.*var\(([^)]+)?$/;
 
+const CSS_VARIABLE_REGEXP = /--[A-Za-z0-9_-]+/g;
+
+const findCssVariableAtPosition = (
+  doc: lstd.TextDocument,
+  position: ls.Position
+): { variable: string; range: ls.Range } | null => {
+  const docText = doc.getText();
+  const offset = doc.offsetAt(position);
+  CSS_VARIABLE_REGEXP.lastIndex = 0;
+
+  let match: RegExpExecArray | null;
+
+  while ((match = CSS_VARIABLE_REGEXP.exec(docText)) !== null) {
+    const startOffset = match.index;
+    const endOffset = startOffset + match[0].length;
+
+    if (offset >= startOffset && offset <= endOffset) {
+      return {
+        variable: match[0],
+        range: ls.Range.create(
+          doc.positionAt(startOffset),
+          doc.positionAt(endOffset)
+        )
+      };
+    }
+  }
+
+  return null;
+};
+
 const connection = ls.createConnection(ls.ProposedFeatures.all);
 
 logger.init(connection);
@@ -70,6 +100,7 @@ connection.onInitialize(async (params: ls.InitializeParams) => {
         resolveProvider: true,
         triggerCharacters: ['(', '-'],
       },
+      hoverProvider: true,
     }
   };
 
@@ -146,6 +177,81 @@ connection.onCompletion(
 
 connection.onCompletionResolve((item) => {
   return item;
+});
+
+connection.onHover((params) => {
+  const doc = documents.get(params.textDocument.uri);
+
+  if (!doc) {
+    return null;
+  }
+
+  const variableMatch = findCssVariableAtPosition(doc, params.position);
+
+  if (!variableMatch) {
+    return null;
+  }
+
+  const { uriMapper } = uriMapperNm.getUriMapper();
+  const workspaceUri = uriMapper.getWorkspaceUri(params.textDocument.uri);
+
+  if (!workspaceUri) {
+    return null;
+  }
+
+  const { configManager } = configManagerNm.getConfigManager();
+  const container = configManager.fetchConfigContainer(workspaceUri);
+  const schema = container?.cssSchema;
+
+  if (!schema) {
+    return null;
+  }
+
+  const details = schema.getVariableDetails(variableMatch.variable);
+
+  if (!details) {
+    return null;
+  }
+
+  const markdownSections: string[] = [];
+
+  if (details.description) {
+    markdownSections.push(details.description);
+  }
+
+  if (details.deprecated) {
+    markdownSections.push(
+      `\`[deprecated]\`${details.deprecatedDescription ? `: ${details.deprecatedDescription}` : ''}`
+    );
+  }
+
+  const themeBlocks = details.themes.map((theme) => {
+    const originalBlock = ['```css', theme.originalValue, '```'].join('\n');
+
+    if (theme.value === theme.originalValue) {
+      return [`**${theme.name}**`, `${originalBlock}` ].join('\n');
+    }
+
+    const resolvedBlock = ['```css', theme.value, '```'].join('\n');
+
+    return [`**${theme.name}**`, originalBlock, resolvedBlock ].join('\n');
+  });
+
+  if (themeBlocks.length !== 0) {
+    markdownSections.push(themeBlocks.join('\n\n'));
+  }
+
+  const contents: ls.MarkupContent = {
+    kind: 'markdown',
+    value: markdownSections.join('\n\n')
+  };
+
+  const hover: ls.Hover = {
+    contents,
+    range: variableMatch.range
+  };
+
+  return hover;
 });
 
 documents.listen(connection);

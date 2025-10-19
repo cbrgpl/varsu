@@ -12,6 +12,20 @@ interface ICssVarMetadata {
   deprecatedDescription?: string;
 }
 
+interface ICssVarThemesSnapshot {
+  name: string;
+  value: string;
+  originalValue: string;
+}
+
+interface ICssVarDetails {
+  name: string;
+  description?: string;
+  deprecated: boolean;
+  deprecatedDescription?: string;
+  themes: ICssVarThemesSnapshot[];
+}
+
 /** @description Config params used by css schema */
 type CssSchemaConfig = Pick<types.IConfig, 'sourceUrl' | "themes">;
 
@@ -75,6 +89,42 @@ ${ isVariableComplex ? node.metadata.value + '\n\n' : '' }${value}`;
     }
 
     return Array.from(completions.values());
+  }
+
+  getVariableDetails( varName: string ): ICssVarDetails | null {
+    const normalizedVarName = varName.startsWith('--') ? varName : `--${varName}`;
+
+    let baseMetadata: ICssVarMetadata | null = null;
+    const themes: ICssVarThemesSnapshot[] = [];
+
+    for(const [ themeName, graph ] of this._themeGraphs.entries()) {
+      const node = graph.nodes.get(normalizedVarName);
+      if(!node) {
+        continue;
+      }
+
+      if(!baseMetadata) {
+        baseMetadata = node.metadata;
+      }
+
+      themes.push({
+        name: themeName,
+        value: node.value,
+        originalValue: node.metadata.value,
+      });
+    }
+
+    if(!baseMetadata) {
+      return null;
+    }
+
+    return {
+      name: normalizedVarName,
+      description: baseMetadata.description,
+      deprecated: baseMetadata.deprecated,
+      deprecatedDescription: baseMetadata.deprecatedDescription,
+      themes,
+    };
   }
 
   private async _loadSchema( url: string, themes: types.ICssTheme[] ): Promise<void> {

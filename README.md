@@ -17,6 +17,7 @@ We don’t assume theme logic. We infer it.
 - Theme-aware suggestions (`:root`, `[data-theme-dark]`, etc.)
 - Value calculation support (e.g. `--x2 = calc(--x1 * 2)`)
 - Deprecation warnings via `@deprecated`
+- Hover previews that show descriptions and theme-specific values
 
 ## Support
 
