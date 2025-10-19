@@ -5,6 +5,10 @@
   /* @deprecated --ttest2 @description хоба буба */
   --test: calc(10px + var(--h1-fs)) - var(--t1);
 
+  --primary-color: #312;
+
+  --button-shadow: calc(var(--primary-color) + var(--primary-color));
+
   --app-bgc: #f3f3f7;
   --app-border: #e8e8ec;
   --panel-bgc: #ffffff;
