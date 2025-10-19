@@ -249,7 +249,7 @@ class CssVarNode {
     let val = this.metadata.value;
 
     for(const dependent of this.dependsOn) {
-      val = val.replace(`var(${dependent.metadata.name})`, dependent.value);
+      val = val.replaceAll(`var(${dependent.metadata.name})`, dependent.value);
     }
 
     return val;
@@ -282,28 +282,26 @@ export class DependencyGraph {
     const usedVarsNames = variable.value.matchAll(CSS_USED_VAR).toArray().map( v => v[0] );
     const usedVars = this._vars.filter( variable => usedVarsNames.includes(variable.name));
 
-    if(usedVars.length) {
-      for(const usedVar of usedVars ) {
+    for(const usedVar of usedVars ) {
 
-        const circularDep = usedVarsNames.find( (name) => toBeResolved[name] ) ?? null;
-        if( circularDep ) {
-          logger.warn( new Error(`Circular dependency for "${circularDep}" and "${node.metadata.name}" is detected`, { cause: [ node.metadata.name, circularDep ] }));
-          return;
-        }
-
-        if(!this.nodes.get(usedVar.name)) {
-          this._resolveVar(usedVar, {...toBeResolved, [node.metadata.name]: true });
-        }
-
-        const usedVarnode = this.nodes.get(usedVar.name);
-
-        if(usedVarnode) {
-          node.dependsOn.add(usedVarnode);
-          usedVarnode.dependents.add(node);
-        }
-
-
+      const circularDep = usedVarsNames.find( (name) => toBeResolved[name] ) ?? null;
+      if( circularDep ) {
+        logger.warn( new Error(`Circular dependency for "${circularDep}" and "${node.metadata.name}" is detected`, { cause: [ node.metadata.name, circularDep ] }));
+        return;
       }
+
+      if(!this.nodes.get(usedVar.name)) {
+        this._resolveVar(usedVar, {...toBeResolved, [node.metadata.name]: true });
+      }
+
+      const usedVarnode = this.nodes.get(usedVar.name);
+
+      if(usedVarnode) {
+        node.dependsOn.add(usedVarnode);
+        usedVarnode.dependents.add(node);
+      }
+
+
     }
 
 
