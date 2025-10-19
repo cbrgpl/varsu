@@ -257,7 +257,7 @@ class CssVarNode {
 }
 
 /** @description matches var(--.+) */
-const CSS_USED_VAR  = /(?<=var\()--.+?(?=\))/g;
+const CSS_USED_VAR  = /(?<=var\()--.+?(?=[,)])/g;
 
 export class DependencyGraph {
   public nodes = new Map<string, CssVarNode>();
