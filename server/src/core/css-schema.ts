@@ -186,7 +186,7 @@ ${ isVariableComplex ? node.metadata.value + '\n\n' : '' }${value}`;
 
     csstree.walk(ast, {
       visit: 'Rule',
-      enter(node) {
+      enter(node: csstree.CssNode) {
         if (
           node.type === 'Rule' &&
         csstree.generate(node.prelude).trim() === selector &&
