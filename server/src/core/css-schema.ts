@@ -48,43 +48,39 @@ export class CssSchema implements types.ISuggestingSchema {
     this._loadSchema( config.sourceUrl, config.themes );
   }
 
-  getCompletions( partialVarName: string ): ls.CompletionItem[] | null {
-    const inputedVarName = '--' + partialVarName.replace(/^--/, '');
-
+  getCompletions(): ls.CompletionItem[] | null {
     const completions = new Map<string, ls.CompletionItem>();
 
     for(const [ theme, graph ] of this._themeGraphs.entries()) {
       for(const key of graph.nodes.keys()) {
-        if(key.startsWith(inputedVarName)) {
-          const completion: ls.CompletionItem = completions.get(key) ?? {
-            label: key,
-            kind: ls.CompletionItemKind.Variable,
-            documentation: {
-              kind: 'markdown',
-              value: ''
-            }
-          };
-
-          const node =  graph.nodes.get(key);
-          if(!node) { continue; }
-
-          const isFirstThemeOccurrence = !completions.has(key);
-          // NOTE Shows @description and @deprecated in completion ONLY ONCE FROM THE FIRST THEME CONTAINING VARIABLE
-          if(isFirstThemeOccurrence) {
-            completion.detail = node.metadata.description
-            ;(completion.documentation as ls.MarkupContent).value += node.metadata.deprecated ? `\`[deprecated]: ${node.metadata.deprecatedDescription}\`\n\n` : "\n\n";
+        const completion: ls.CompletionItem = completions.get(key) ?? {
+          label: key,
+          kind: ls.CompletionItemKind.Variable,
+          documentation: {
+            kind: 'markdown',
+            value: ''
           }
+        };
 
-          const value = node.value;
+        const node =  graph.nodes.get(key);
+        if(!node) { continue; }
 
-          /** @description If value uses another value value will be different */
-          const isVariableComplex = value !== node.metadata.value;
+        const isFirstThemeOccurrence = !completions.has(key);
+        // NOTE Shows @description and @deprecated in completion ONLY ONCE FROM THE FIRST THEME CONTAINING VARIABLE
+        if(isFirstThemeOccurrence) {
+          completion.detail = node.metadata.description
+          ;(completion.documentation as ls.MarkupContent).value += node.metadata.deprecated ? `\`[deprecated]: ${node.metadata.deprecatedDescription}\`\n\n` : "\n\n";
+        }
 
-          ;(completion.documentation as ls.MarkupContent).value += `\n\n**\`${theme}:\`**\n
+        const value = node.value;
+
+        /** @description If value uses another value value will be different */
+        const isVariableComplex = value !== node.metadata.value;
+
+        ;(completion.documentation as ls.MarkupContent).value += `\n\n**\`${theme}:\`**\n
 ${ isVariableComplex ? node.metadata.value + '\n\n' : '' }${value}`;
 
-          completions.set(key, completion);
-        }
+        completions.set(key, completion);
       }
     }
 
