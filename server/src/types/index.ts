@@ -3,7 +3,7 @@ import * as ls from 'vscode-languageserver/node.js';
 
 /** @description Schema which suggests something */
 export interface ISuggestingSchema {
-  getCompletions( valueToFilter: string ): ls.CompletionItem[] | null
+  getCompletions(): ls.CompletionItem[] | null
 }
 
 /** @description Css theme data */

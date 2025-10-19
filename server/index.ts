@@ -9,9 +9,6 @@ import * as uriMapperNm from './src/core/uri-mapper.js';
 import * as types from './src/types/index.js';
 import { logger } from './src/utils/logger.js';
 
-/** @description matches at least var( at most var(..., where ... inputed var name */
-const COMPLETION_TRIGGER_REGEXP = /.*var\(([^)]+)?$/;
-
 const CSS_VARIABLE_REGEXP = /--[A-Za-z0-9_-]+/g;
 
 const findCssVariableAtPosition = (
@@ -140,6 +137,7 @@ connection.onCompletion(
 
     if(!workspaceUri) { return []; }
 
+
     const { configManager } = configManagerNm.getConfigManager();
     const container = configManager.fetchConfigContainer( workspaceUri );
 
@@ -158,20 +156,19 @@ connection.onCompletion(
       end: position
     });
 
-    const inputedVar = textBeforeCursor.match(COMPLETION_TRIGGER_REGEXP);
+    console.log(textBeforeCursor);
 
-    if(inputedVar !== null) {
-      const cssCompletions = container.cssSchema.getCompletions( inputedVar[1] ?? '' );
+    if(!textBeforeCursor.includes('var')) { return []; }
 
-      if(!cssCompletions) {
-        return [];
-      }
+    const completions = container.cssSchema.getCompletions();
 
-      return cssCompletions;
+    console.log(completions);
+
+    if(!completions) {
+      return [];
     }
 
-
-    return [];
+    return completions;
   }
 );
 
