@@ -47,6 +47,7 @@ class ConfigManager {
 
   /** @description Called in onInitialized hook. Used for preload configs for all workspaces */
   public async load(): Promise<void> {
+    console.log(this.workspaceUris);
     const promises = this.workspaceUris.map( uri => this._fetchConfig( uri ) );
     const results = await Promise.allSettled(promises);
 
