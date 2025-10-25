@@ -1,1 +1,1 @@
-npx --no lint-staged && npx tsc --noEmit --project server/tsconfig.json && npx tsc --noEmit --project client/tsconfig.json
+npx --no lint-staged && npx tsc --noEmit --project packages/lsp-server/tsconfig.json && npx tsc --noEmit --project packages/vsc-extension/tsconfig.json

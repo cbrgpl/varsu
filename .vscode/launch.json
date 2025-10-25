@@ -9,8 +9,8 @@
 			"runtimeExecutable": "${execPath}",
 			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
 			"outFiles": [
-				"${workspaceRoot}/client/out/**/*.js",
-				"${workspaceRoot}/server/out/**/*.js"
+				"${workspaceRoot}/packages/vsc-extension/out/**/*.js",
+				"${workspaceRoot}/packages/lsp-server/out/**/*.js"
 			],
 			"autoAttachChildProcesses": true,
 			"env": {
@@ -25,10 +25,10 @@
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceRoot}",
-				"--extensionTestsPath=${workspaceRoot}/client/out/test/index",
+				"--extensionTestsPath=${workspaceRoot}/packages/vsc-extension/out/test/index",
 				"${workspaceRoot}/client/testFixture"
 			],
-			"outFiles": ["${workspaceRoot}/client/out/test/**/*.js"]
+			"outFiles": ["${workspaceRoot}packages/vsc-extension/out/test/**/*.js"]
 		}
 	]
 }

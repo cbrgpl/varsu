@@ -39,7 +39,12 @@
     "onLanguage:javascriptreact",
     "onLanguage:typescriptreact"
   ],
-  "main": "./client/out/client/index",
+  "main": "./packages/vsc-extension/out/vsc-extension/index",
+  "workspaces": [
+    "packages/lsp-server",
+    "packages/vsc-extension",
+    "packages/shared"
+  ],
   "contributes": {
     "configuration": {
       "type": "object",
@@ -86,7 +91,6 @@
     "watch": "tsc -b -w",
     "lint": "eslint",
     "prepare": "husky",
-    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
     "test": "sh ./scripts/e2e.sh",
     "lint:fix": "eslint . --fix"
   },
@@ -103,6 +107,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.5.0",
     "mocha": "^10.3.0",
+    "tsx": "^4.20.6",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.29.0",
     "vitest": "^3.2.4"

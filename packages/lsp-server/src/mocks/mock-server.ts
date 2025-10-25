@@ -6,7 +6,8 @@ import { cwd } from 'process';
 
 const cssVariablesFilePromise = (async () => {
   const __dirname = path.dirname(cwd());
-  const cssPath = path.resolve(__dirname, './server/src/mocks/css-vars.css');
+  console.log('dd', __dirname);
+  const cssPath = path.resolve(__dirname, 'lsp-server/src/mocks/css-vars.css');
 
   const cssTextPromise = fs.readFile(cssPath);
 
@@ -30,5 +31,6 @@ const server = http.createServer(
     }
   }
 );
+
 
 server.listen(3005);

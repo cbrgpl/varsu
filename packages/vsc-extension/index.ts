@@ -7,13 +7,13 @@ import {
   ServerOptions,
   TransportKind
 } from 'vscode-languageclient/node.js';
-import { EXT_NAME } from '../shared/constants.js';
+import { EXT_NAME } from '@varsu/shared/constants.js';
 
 let client: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext) {
   const serverModule = context.asAbsolutePath(
-    path.join('server', 'out', 'server', 'index.js')
+    path.join('packages', 'lsp-server', 'out', 'lsp-server', 'index.js')
   );
 
   const serverOptions: ServerOptions = {

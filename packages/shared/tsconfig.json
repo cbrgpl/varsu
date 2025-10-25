@@ -1,0 +1,9 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"composite": true,
+		"outDir": "out",
+	},
+	"include": ["**/*.ts"],
+	"exclude": ["node_modules", ".vscode-test"]
+}

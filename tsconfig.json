@@ -14,7 +14,7 @@
 		".vscode-test"
 	],
 	"references": [
-		{ "path": "./client" },
-		{ "path": "./server" }
+		{ "path": "./packages/vsc-extension" },
+		{ "path": "./packages/lsp-server" }
 	]
 }

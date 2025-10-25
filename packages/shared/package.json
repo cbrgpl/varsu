@@ -1,0 +1,20 @@
+{
+  "name": "@varsu/shared",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./out",
+  "exports": {
+    "./constants.js": {
+      "types": "./out/constants.d.ts",
+      "import": "./out/constants.js"
+    },
+    "./serialization.js": {
+      "types": "./out/serialization.d.ts",
+      "import": "./out/serialization.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "compile:watch": "tsc -b -w"
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "name": "varsu-server",
+  "name": "@varsu/lsp-server",
   "type": "module",
   "description": "Server implementation of VarSu",
   "version": "1.0.0",
@@ -14,7 +14,7 @@
     "url": "git@github.com:cbrgpl/varsu.git"
   },
   "scripts": {
-    "mock-server:start": "node --loader ts-node/esm ./src/mocks/mock-server.ts",
+    "mock-server:start": "tsx ./src/mocks/mock-server.ts",
     "compile:watch": "tsc -b -w"
   },
   "dependencies": {
