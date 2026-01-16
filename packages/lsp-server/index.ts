@@ -1,7 +1,7 @@
 import * as ls from 'vscode-languageserver/node.js';
 import * as lstd from 'vscode-languageserver-textdocument';
 
-import * as constants from './../shared/constants.js';
+import * as constants from '@varsu/shared/constants.js';
 
 import * as capabilities from './src/utils/capability-utils.js';
 import * as configManagerNm from './src/core/config-manager.js';

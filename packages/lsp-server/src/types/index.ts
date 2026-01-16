@@ -1,4 +1,4 @@
-import { EXT_NAME } from '../../../shared/constants.js';
+import { EXT_NAME } from '@varsu/shared/constants.js';
 import * as ls from 'vscode-languageserver/node.js';
 
 /** @description Schema which suggests something */

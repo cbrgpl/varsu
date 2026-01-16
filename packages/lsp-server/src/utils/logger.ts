@@ -1,5 +1,5 @@
 import type { _Connection } from 'vscode-languageserver/node.js';
-import { serialize } from '../../../shared/serialization.js';
+import { LogLevels, serialize } from '@varsu/shared/serialization.js';
 
 class Logger {
   private _lspConsole: _Connection['console'] | null = null;
@@ -19,7 +19,7 @@ class Logger {
       return;
     }
 
-    const serializedPayload = serialize(payload, process.env.VSCODE_LOG_LEVEL ?? "MESSAGE" );
+    const serializedPayload = serialize(payload, (process.env.VSCODE_LOG_LEVEL ?? "MESSAGE") as LogLevels );
     const messageTitle = payload instanceof Error ? `${payload.name}:\n` : '\n';
     const message = `${messageTitle}${serializedPayload}`;
 

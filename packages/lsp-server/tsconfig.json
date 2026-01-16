@@ -5,6 +5,9 @@
 		"outDir": "out",
 		"rootDir": ".."
 	},
-	"include": ["src/**/*.ts", "../shared", "index.ts", "__tests__/config-manager.spec.ts"],
+	"references": [
+		{ "path": "../shared" },
+	],
+	"include": ["src/**/*.ts", "index.ts", "__tests__/config-manager.spec.ts"],
 	"exclude": ["node_modules", ".vscode-test"]
 }
